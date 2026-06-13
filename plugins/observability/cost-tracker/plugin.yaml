@@ -1,0 +1,11 @@
+name: cost-tracker
+kind: observability
+version: 1.0.0
+description: "Prints per-request LLM cost, model, tokens and tool names to stderr. Persists cumulative totals to ~/.hermes/cost_tracker.json."
+author: local
+hooks:
+  - post_api_request
+  - post_llm_call
+  - pre_tool_call
+  - post_tool_call
+  - transform_llm_output
