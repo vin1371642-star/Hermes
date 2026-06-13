@@ -524,22 +524,25 @@ def _resolve_detached_python(python_exe: str) -> tuple[str, Path, list[str]]:
 
     uv-created Windows venv launchers are special: ``venv\\Scripts\\pythonw.exe``
     starts hidden, but then respawns the base interpreter as console
-    ``python.exe``.  That child opens a visible Windows Terminal tab.  For uv
-    venvs, use the base ``pythonw.exe`` directly and put the repo + venv
-    site-packages on ``PYTHONPATH`` so imports still resolve without the venv
-    launcher.
+    ``python.exe``.  That child opens a visible Windows Terminal tab.
+
+    To avoid this we use the venv's ``python.exe`` (not pythonw.exe) directly —
+    the DETACHED_PROCESS | CREATE_NO_WINDOW flags in _spawn_detached() already
+    suppress any console window, so the workaround of switching to the base
+    interpreter is not needed and breaks native extensions (e.g. pywin32) that
+    rely on .pth files being loaded from the venv's site-packages.
     """
     p = Path(python_exe)
     venv_dir = p.parent.parent
     windowed = _derive_venv_pythonw(python_exe)
 
     cfg = _read_pyvenv_cfg(venv_dir)
-    home = cfg.get("home", "")
-    if "uv" in cfg and home:
-        base_pythonw = Path(home) / "pythonw.exe"
-        site_packages = venv_dir / "Lib" / "site-packages"
-        if base_pythonw.exists() and site_packages.exists():
-            return (str(base_pythonw), venv_dir, [str(site_packages)])
+    if "uv" in cfg:
+        # Use the venv's own python.exe so .pth files (e.g. pywin32.pth) are
+        # processed and native extensions resolve correctly.
+        venv_python = p.parent / "python.exe"
+        if venv_python.exists():
+            return (str(venv_python), venv_dir, [])
 
     return (windowed, venv_dir, [])
 
