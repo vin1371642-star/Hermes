@@ -1,0 +1,7 @@
+name: auto-router
+kind: standalone
+version: 1.0.0
+description: "Automatically selects the optimal OpenRouter model based on task type (marketing, code, research, creative) detected from user message keywords."
+author: local
+hooks:
+  - pre_gateway_dispatch

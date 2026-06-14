@@ -1,0 +1,7 @@
+name: replicate
+version: 1.0.0
+description: "Replicate image generation backend. Default model: FLUX 1.1 Pro Ultra (8MP, photorealistic)."
+author: local
+kind: backend
+requires_env:
+  - REPLICATE_API_TOKEN

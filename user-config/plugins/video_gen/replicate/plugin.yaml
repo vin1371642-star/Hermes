@@ -1,0 +1,7 @@
+name: replicate
+version: 1.0.0
+description: "Replicate video generation backend. Default model: Wan 2.1 T2V 720p (best open-weight T2V)."
+author: local
+kind: backend
+requires_env:
+  - REPLICATE_API_TOKEN
