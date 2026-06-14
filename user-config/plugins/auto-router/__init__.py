@@ -31,7 +31,7 @@ MODELS: dict[str, str] = {
     "code_write":     "deepseek/deepseek-v4-pro",
     "code_arch":      "anthropic/claude-opus-4.8",
     "code_review":    "anthropic/claude-sonnet-4.6",
-    "code_debug":     "deepseek/deepseek-v4-pro",
+    "code_debug":     "anthropic/claude-sonnet-4.6",   # errors need context — sonnet > deepseek
     "code_test":      "deepseek/deepseek-v4-pro",
     "code_docs":      "anthropic/claude-sonnet-4.6",
     "code_large":     "google/gemini-3.1-pro-preview",
@@ -53,7 +53,7 @@ ESCALATE: dict[str, str] = {
     "creative_light": "anthropic/claude-opus-4.8",
     "mkt_content":    "anthropic/claude-opus-4.8",
     "code_write":     "anthropic/claude-opus-4.8",
-    "code_debug":     "anthropic/claude-sonnet-4.6",
+    "code_debug":     "anthropic/claude-opus-4.8",      # complex bug → opus
     "research_web":   "google/gemini-3.1-pro-preview",
     "mkt_analytics":  "anthropic/claude-sonnet-4.6",
     "math":           "anthropic/claude-opus-4.8",
@@ -147,7 +147,7 @@ def _classify(text: str) -> tuple[str | None, int]:
         "mkt_ads":      _match(['реклам', 'объявлени', 'таргет', 'баннер', 'google ads', 'meta ads', 'cta', 'рекламный текст', 'ad copy', 'яндекс директ'], t),
         "mkt_seo":      _match(['seo', 'сео', 'семантик', 'ключевые слов', 'мета-тег', 'meta description', 'title tag', 'поисковая оптимизаци', 'ранжирован'], t),
         "mkt_analytics":_match(['roas', 'cpa', 'ctr', 'roi', 'метрик', 'воронк', 'конверси', 'аналитик', 'дашборд', 'kpi', 'attribution', 'когорт', 'retention'], t),
-        "mkt_social":   _match(['instagram', 'инстаграм', 'вконтакте', 'tiktok', 'telegram канал', 'stories', 'сторис', 'reels', 'smm', 'соцсет', 'youtube канал'], t),
+        "mkt_social":   _match(['instagram', 'инстаграм', 'вконтакте', 'tiktok', 'telegram канал', 'stories', 'сторис', 'reels', 'smm', 'соцсет', 'youtube канал', 'напиши пост для', 'пост в инстаграм', 'пост для тг', 'пост для telegram'], t),
         "mkt_research": _match(['анализ конкурент', 'анализ рынк', 'аудитори', 'скрапи', 'парси сайт', 'competitor', 'market research', 'портрет клиент'], t),
     }
     if scores_mkt["mkt_brand"] > 0 and scores_mkt["mkt_longform"] > 0:
@@ -158,7 +158,7 @@ def _classify(text: str) -> tuple[str | None, int]:
         "code_arch":  _match(['архитектур', 'спроектируй', 'system design', 'паттерн', 'микросервис', 'как построить', 'структура проект', 'scheme'], t),
         "code_write": _match(['напиши код', 'напиши функци', 'реализуй', 'написать скрипт', 'write code', 'implement', 'create class', 'добавь метод', 'сделай эндпоинт', 'def ', 'class ', 'async def'], t),
         "code_review":_match(['проверь код', 'code review', 'ревью', 'что не так с кодом', 'review this', 'улучши код', 'оптимизируй', 'рефактор', 'refactor', 'clean up'], t),
-        "code_debug": _match(['баг', 'ошибк', 'exception', 'traceback', 'error:', 'не работает', 'почему падает', 'debug', 'исправь', 'не запускается', 'AttributeError', 'TypeError', 'ValueError', 'ImportError', 'SyntaxError'], t),
+        "code_debug": _match(['баг', 'ошибк', 'exception', 'traceback', 'error:', 'не работает', 'почему падает', 'debug', 'исправь', 'не запускается', 'AttributeError', 'TypeError', 'ValueError', 'ImportError', 'SyntaxError', 'не удалось', 'failed', 'forbidden', '401', '403', '404', '500', 'токен', 'авторизац', 'authentication', 'permission denied', 'access denied', 'invalid token', 'не подключается', 'не принимает', 'отказал'], t),
         "code_test":  _match(['напиши тест', 'unit test', 'integration test', 'pytest', 'тест для', 'test coverage', 'mock', 'fixture', 'write tests'], t),
         "code_docs":  _match(['документаци', 'readme', 'docstring', 'комментари к коду', 'документируй', 'write docs'], t),
         "code_large": _match(['весь репозитори', 'вся кодовая база', 'найди в коде', 'все файлы проект', 'search codebase', 'проблемы в коде', 'по всему проект', 'across the repo'], t),
