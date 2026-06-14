@@ -38,7 +38,7 @@ agent:
   tool_use_enforcement: auto
   task_completion_guidance: true
   environment_probe: true
-  environment_hint: ''
+  environment_hint: "When writing code, integrating APIs, installing MCP servers, or using any library/framework — always use Context7 MCP first: call mcp_context7_resolve-library-id to find the library ID, then mcp_context7_get-library-docs to get current documentation. This ensures accurate, up-to-date API references instead of outdated training data."
   gateway_timeout_warning: 900
   clarify_timeout: 600
   gateway_notify_interval: 180
@@ -535,6 +535,13 @@ paste_collapse_threshold_fallback: 5
 paste_collapse_char_threshold: 2000
 _config_version: 26
 mcp_servers:
+  context7:
+    command: npx
+    args:
+    - -y
+    - '@upstash/context7-mcp'
+    env:
+      CONTEXT7_API_KEY: ${CONTEXT7_API_KEY}
   github:
     command: npx
     args:
